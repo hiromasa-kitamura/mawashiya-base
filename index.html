@@ -171,26 +171,6 @@
 
     .hero-content { position: relative; z-index: 1; }
 
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 16px;
-      background: var(--color-primary-light);
-      border-radius: var(--radius-full);
-      font-size: 0.78rem;
-      color: var(--color-primary-dark);
-      font-weight: 500;
-      margin-bottom: 24px;
-      letter-spacing: 0.04em;
-    }
-
-    .hero-badge-dot {
-      width: 6px; height: 6px;
-      background: var(--color-accent);
-      border-radius: 50%;
-    }
-
     .hero-headline {
       font-size: clamp(1.8rem, 4vw, 2.6rem);
       font-weight: 700;
@@ -810,7 +790,7 @@
         text-align: center;
       }
       .hero-visual { max-width: 420px; margin: 0 auto; }
-      .hero-badge, .hero-price { justify-content: center; }
+      .hero-price { justify-content: center; }
       .features-grid { grid-template-columns: repeat(3, 1fr); }
       .worries-grid { grid-template-columns: repeat(2, 1fr); }
       .solution-grid, .voices-grid {
@@ -856,10 +836,6 @@
   <section class="hero">
     <div class="hero-inner">
       <div class="hero-content fade-up">
-        <div class="hero-badge">
-          <span class="hero-badge-dot"></span>
-          Online Community
-        </div>
         <h1 class="hero-headline">
           わたしのペースで、<br><em>未来をつくる。</em>
         </h1>
@@ -1107,7 +1083,7 @@
               <path d="m4.93 19.07 2.83-2.83"/><path d="m16.24 7.76 2.83-2.83"/>
             </svg>
           </div>
-          <div class="feature-title">月5名限定サポート</div>
+          <div class="feature-title">月5名限定コーチング</div>
           <div class="feature-desc">1時間じっくり<br>1on1で寄り添います</div>
         </div>
         <div class="feature-card fade-up" style="transition-delay:0.15s">
@@ -1218,7 +1194,7 @@
         <div class="solution-card fade-up" style="transition-delay:0.2s">
           <div class="solution-number">03</div>
           <h3 class="solution-title">実際のお仕事につながる</h3>
-          <p class="solution-desc">スキルに合ったお仕事を紹介。学んだことがそのまま実践に。月5名限定の成長サポートで着実にステップアップ。</p>
+          <p class="solution-desc">スキルに合ったお仕事を紹介。学んだことがそのまま実践に。月5名限定のコーチングで着実にステップアップ。</p>
         </div>
       </div>
     </div>
@@ -1304,7 +1280,7 @@
             <svg class="faq-question-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
           </button>
           <div class="faq-answer">
-            <div class="faq-answer-inner">大丈夫です。小さな業務からスタートできる案件もあり、成長サポートもご用意しています。「これから挑戦したい」という方も歓迎しています。</div>
+            <div class="faq-answer-inner">大丈夫です。小さな業務からスタートできる案件もあり、コーチングもご用意しています。「これから挑戦したい」という方も歓迎しています。</div>
           </div>
         </div>
         <div class="faq-item fade-up" style="transition-delay:0.15s">
@@ -1346,7 +1322,7 @@
         </div>
         <div class="faq-item fade-up" style="transition-delay:0.35s">
           <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
-            <span>コーチング・成長サポートは誰でも受けられますか？</span>
+            <span>コーチングは誰でも受けられますか？</span>
             <svg class="faq-question-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
           </button>
           <div class="faq-answer">
