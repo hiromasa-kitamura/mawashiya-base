@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>介護日誌｜ケアダイアリー</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green: #2e7d6f;
+      --green-light: #3a9d8f;
+      --green-pale: #e8f5f1;
+      --green-glow: rgba(46, 125, 111, 0.12);
+      --orange: #e8923e;
+      --orange-pale: #fef3e2;
+      --red: #d64545;
+      --red-pale: #fde8e8;
+      --blue: #4a8bc2;
+      --blue-pale: #e8f0fa;
+      --bg: #f5f7f4;
+      --surface: #ffffff;
+      --border: rgba(0,0,0,0.08);
+      --text: #2c3e2e;
+      --text-secondary: rgba(44,62,46,0.6);
+      --text-muted: rgba(44,62,46,0.38);
+      --radius: 14px;
+      --radius-lg: 20px;
+      --shadow: 0 2px 16px rgba(46,125,111,0.08);
+      --shadow-hover: 0 4px 24px rgba(46,125,111,0.14);
+      --font: 'Noto Sans JP', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--font);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.7;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* ===== Header ===== */
+    .header {
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
+      color: #fff;
+      padding: 20px 20px 24px;
+      text-align: center;
+    }
+
+    .header-icon {
+      font-size: 2rem;
+      margin-bottom: 4px;
+    }
+
+    .header h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .header p {
+      font-size: 0.78rem;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+
+    /* ===== Container ===== */
+    .container {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* ===== Form Card ===== */
+    .form-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 24px 20px;
+      margin-top: -12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-row {
+      margin-bottom: 14px;
+    }
+
+    .form-row label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .form-row input,
+    .form-row textarea,
+    .form-row select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: var(--font);
+      font-size: 0.95rem;
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    .form-row input:focus,
+    .form-row textarea:focus,
+    .form-row select:focus {
+      border-color: var(--green-light);
+      box-shadow: 0 0 0 3px var(--green-glow);
+    }
+
+    .form-row textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* ===== Condition Select ===== */
+    .condition-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .condition-btn {
+      flex: 1;
+      min-width: 70px;
+      padding: 10px 8px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      font-family: var(--font);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .condition-btn:hover {
+      border-color: var(--green-light);
+    }
+
+    .condition-btn.active {
+      border-color: var(--green);
+      background: var(--green-pale);
+      color: var(--green);
+      font-weight: 500;
+    }
+
+    .condition-btn .emoji {
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 2px;
+    }
+
+    /* ===== Save Button ===== */
+    .save-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
+      color: #fff;
+      font-family: var(--font);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+      margin-top: 6px;
+    }
+
+    .save-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(46,125,111,0.25);
+    }
+
+    .save-btn:active {
+      transform: translateY(0);
+    }
+
+    /* ===== Entries ===== */
+    .entries-section {
+      margin-top: 28px;
+    }
+
+    .entries-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .entries-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .entries-count {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: var(--green-pale);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .entry-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      transition: box-shadow 0.2s;
+      position: relative;
+    }
+
+    .entry-card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    .entry-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .entry-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .entry-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .entry-condition {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+
+    .entry-condition.good {
+      background: var(--green-pale);
+      color: var(--green);
+    }
+
+    .entry-condition.normal {
+      background: var(--blue-pale);
+      color: var(--blue);
+    }
+
+    .entry-condition.poor {
+      background: var(--orange-pale);
+      color: var(--orange);
+    }
+
+    .entry-condition.bad {
+      background: var(--red-pale);
+      color: var(--red);
+    }
+
+    .entry-memo {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .entry-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      justify-content: flex-end;
+    }
+
+    .entry-action-btn {
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      font-family: var(--font);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .entry-action-btn:hover {
+      background: var(--green-pale);
+      border-color: var(--green-light);
+      color: var(--green);
+    }
+
+    .entry-action-btn.delete:hover {
+      background: var(--red-pale);
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    /* ===== Empty State ===== */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state .icon {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      font-size: 0.88rem;
+    }
+
+    /* ===== Toast ===== */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--green);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      z-index: 100;
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ===== Search / Filter ===== */
+    .filter-row {
+      margin-top: 20px;
+      margin-bottom: 4px;
+    }
+
+    .filter-row input {
+      width: 100%;
+      padding: 10px 14px 10px 38px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: var(--font);
+      font-size: 0.88rem;
+      color: var(--text);
+      background: var(--surface);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .filter-row input:focus {
+      border-color: var(--green-light);
+      box-shadow: 0 0 0 3px var(--green-glow);
+    }
+
+    .filter-wrapper {
+      position: relative;
+    }
+
+    .filter-wrapper .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-icon">📋</div>
+    <h1>ケアダイアリー</h1>
+    <p>介護日誌アプリ</p>
+  </div>
+
+  <div class="container">
+    <!-- 入力フォーム -->
+    <div class="form-card">
+      <div class="form-title">📝 新しい記録</div>
+
+      <div class="form-row">
+        <label for="userName">利用者名</label>
+        <input type="text" id="userName" placeholder="例：山田 太郎">
+      </div>
+
+      <div class="form-row">
+        <label for="entryDate">日付</label>
+        <input type="date" id="entryDate">
+      </div>
+
+      <div class="form-row">
+        <label>体調</label>
+        <div class="condition-group">
+          <button type="button" class="condition-btn" data-value="good" onclick="selectCondition(this)">
+            <span class="emoji">😊</span>良好
+          </button>
+          <button type="button" class="condition-btn" data-value="normal" onclick="selectCondition(this)">
+            <span class="emoji">🙂</span>普通
+          </button>
+          <button type="button" class="condition-btn" data-value="poor" onclick="selectCondition(this)">
+            <span class="emoji">😐</span>やや不調
+          </button>
+          <button type="button" class="condition-btn" data-value="bad" onclick="selectCondition(this)">
+            <span class="emoji">😞</span>不調
+          </button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="memo">メモ</label>
+        <textarea id="memo" placeholder="食事・服薬・活動・気づきなど"></textarea>
+      </div>
+
+      <button class="save-btn" onclick="saveEntry()">記録を保存</button>
+    </div>
+
+    <!-- 検索 -->
+    <div class="filter-row">
+      <div class="filter-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="利用者名で検索..." oninput="renderEntries()">
+      </div>
+    </div>
+
+    <!-- 記録一覧 -->
+    <div class="entries-section">
+      <div class="entries-header">
+        <div class="entries-title">📖 記録一覧</div>
+        <div class="entries-count" id="entriesCount">0 件</div>
+      </div>
+      <div id="entriesList"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  const STORAGE_KEY = 'care-diary-entries';
+
+  // 今日の日付をセット
+  document.getElementById('entryDate').value = new Date().toISOString().split('T')[0];
+
+  let selectedCondition = '';
+  let editingId = null;
+
+  const conditionLabels = {
+    good: '😊 良好',
+    normal: '🙂 普通',
+    poor: '😐 やや不調',
+    bad: '😞 不調'
+  };
+
+  function selectCondition(btn) {
+    document.querySelectorAll('.condition-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedCondition = btn.dataset.value;
+  }
+
+  function getEntries() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    } catch {
+      return [];
+    }
+  }
+
+  function setEntries(entries) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function saveEntry() {
+    const userName = document.getElementById('userName').value.trim();
+    const entryDate = document.getElementById('entryDate').value;
+    const memo = document.getElementById('memo').value.trim();
+
+    if (!userName) { showToast('利用者名を入力してください'); return; }
+    if (!entryDate) { showToast('日付を選択してください'); return; }
+    if (!selectedCondition) { showToast('体調を選択してください'); return; }
+
+    const entries = getEntries();
+
+    if (editingId) {
+      const idx = entries.findIndex(e => e.id === editingId);
+      if (idx !== -1) {
+        entries[idx] = { ...entries[idx], userName, entryDate, condition: selectedCondition, memo };
+      }
+      editingId = null;
+      document.querySelector('.form-title').textContent = '📝 新しい記録';
+      document.querySelector('.save-btn').textContent = '記録を保存';
+      showToast('記録を更新しました');
+    } else {
+      entries.unshift({
+        id: Date.now().toString(),
+        userName,
+        entryDate,
+        condition: selectedCondition,
+        memo,
+        createdAt: new Date().toISOString()
+      });
+      showToast('記録を保存しました');
+    }
+
+    setEntries(entries);
+    clearForm();
+    renderEntries();
+  }
+
+  function clearForm() {
+    document.getElementById('userName').value = '';
+    document.getElementById('entryDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('memo').value = '';
+    selectedCondition = '';
+    document.querySelectorAll('.condition-btn').forEach(b => b.classList.remove('active'));
+  }
+
+  function editEntry(id) {
+    const entries = getEntries();
+    const entry = entries.find(e => e.id === id);
+    if (!entry) return;
+
+    editingId = id;
+    document.getElementById('userName').value = entry.userName;
+    document.getElementById('entryDate').value = entry.entryDate;
+    document.getElementById('memo').value = entry.memo || '';
+
+    selectedCondition = entry.condition;
+    document.querySelectorAll('.condition-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.value === entry.condition);
+    });
+
+    document.querySelector('.form-title').textContent = '✏️ 記録を編集';
+    document.querySelector('.save-btn').textContent = '更新する';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function deleteEntry(id) {
+    if (!confirm('この記録を削除しますか？')) return;
+    const entries = getEntries().filter(e => e.id !== id);
+    setEntries(entries);
+    renderEntries();
+    showToast('記録を削除しました');
+  }
+
+  function formatDate(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    const days = ['日', '月', '火', '水', '木', '金', '土'];
+    return `${d.getFullYear()}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getDate().toString().padStart(2,'0')}（${days[d.getDay()]}）`;
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function renderEntries() {
+    const search = document.getElementById('searchInput').value.trim();
+    let entries = getEntries();
+
+    if (search) {
+      entries = entries.filter(e => e.userName.includes(search));
+    }
+
+    // 日付降順
+    entries.sort((a, b) => b.entryDate.localeCompare(a.entryDate) || Number(b.id) - Number(a.id));
+
+    document.getElementById('entriesCount').textContent = entries.length + ' 件';
+
+    if (entries.length === 0) {
+      document.getElementById('entriesList').innerHTML = `
+        <div class="empty-state">
+          <div class="icon">📋</div>
+          <p>${search ? '該当する記録がありません' : 'まだ記録がありません'}</p>
+        </div>`;
+      return;
+    }
+
+    document.getElementById('entriesList').innerHTML = entries.map(e => `
+      <div class="entry-card">
+        <div class="entry-top">
+          <div class="entry-name">${escapeHtml(e.userName)}</div>
+          <div class="entry-date">${formatDate(e.entryDate)}</div>
+        </div>
+        <div class="entry-condition ${e.condition}">${conditionLabels[e.condition] || e.condition}</div>
+        ${e.memo ? `<div class="entry-memo">${escapeHtml(e.memo)}</div>` : ''}
+        <div class="entry-actions">
+          <button class="entry-action-btn" onclick="editEntry('${e.id}')">編集</button>
+          <button class="entry-action-btn delete" onclick="deleteEntry('${e.id}')">削除</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // 初期表示
+  renderEntries();
+</script>
+
+</body>
+</html>
